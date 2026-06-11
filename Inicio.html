@@ -327,9 +327,10 @@
 /* Grid que organiza os cards */
 .grid-equipe {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); 
     gap: 30px;
-    justify-content: center;
+    max-width: 1000px; /* Limita a largura total do grupo de cards */
+    margin: 0 auto;
 }
 
 /* Estilo do Card Individual */
