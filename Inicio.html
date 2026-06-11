@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Por dentro das eleições</title>
+    <style>
+        :root {
+            --green-theme: #006b33; 
+            --green-dark: #004d25;
+            --text-color: #333;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* --- CABEÇALHO --- */
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: var(--green-theme);
+            height: 65px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo-container { height: 45px; display: flex; align-items: center; }
+        .logo-container img { height: 100%; width: auto; }
+
+        /* --- NAVEGAÇÃO DESKTOP --- */
+        .header-info { display: flex; gap: 10px; }
+        .contact-button {
+            display: flex; align-items: center; gap: 8px; color: white;
+            font-size: 11px; text-transform: uppercase; text-decoration: none;
+            padding: 8px 12px; border-radius: 25px; transition: all 0.3s ease;
+        }
+        .contact-button:hover { background: rgba(255, 255, 255, 0.2); }
+        .icon-circle {
+            width: 22px; height: 22px; background: white; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+
+        /* --- MENU HAMBÚRGUER --- */
+        .menu-toggle {
+            display: none; flex-direction: column; justify-content: space-around;
+            width: 30px; height: 25px; background: transparent; border: none; cursor: pointer; padding: 0; z-index: 1100;
+        }
+        .menu-toggle span { width: 30px; height: 3px; background: white; border-radius: 10px; transition: all 0.3s linear; transform-origin: 1px; }
+        .menu-toggle.open span:nth-child(1) { transform: rotate(45deg); }
+        .menu-toggle.open span:nth-child(2) { opacity: 0; transform: translateX(20px); }
+        .menu-toggle.open span:nth-child(3) { transform: rotate(-45deg); }
+
+        /* --- OVERLAY --- */
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1050; }
+        .overlay.active { display: block; }
+
+        /* --- CONTEÚDO BASE --- */
+        .container { max-width: 900px; margin: 0 auto; padding: 40px 20px; }
+
+        /* --- RESPONSIVIDADE MOBILE --- */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            
+            .header-info {
+                position: fixed; right: -100%; top: 0; height: 100vh; width: 260px;
+                background-color: var(--green-dark); flex-direction: column; padding: 80px 20px;
+                transition: right 0.4s ease-in-out; z-index: 1060; box-shadow: -5px 0 15px rgba(0,0,0,0.3);
+            }
+            
+            .header-info.active { right: 0; }
+            
+            .contact-button { font-size: 14px; padding: 15px; width: 100%; border-radius: 8px; margin-bottom: 10px; }
+        }
+        .intro {
+ text-align: left;
+    margin-top: 20px;
+    width: 100%;
+}
+
+.intro h1 {
+  font-size: 2.5rem;           
+    color: var(--green-theme);
+    margin-bottom: 24px;
+    font-weight: 800;            
+    line-height: 1.25;          
+    letter-spacing: -0.5px;      
+    text-transform: none;
+}
+
+.intro p {
+    font-size: 1.15rem;
+    line-height: 1.8;
+    color: #555;
+    text-align: justify;
+    word-break: break-word;
+}
+        .video-section {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.video-section iframe {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: none;
+    border-radius: 12px;
+}
+        .subtitulo-divisor {
+    display: flex;
+    align-items: center;
+    margin: 40px 0 20px;
+            width: 100%;
+            box-sizing: border-box;
+}
+
+.subtitulo-divisor h2 {
+    margin: 0;
+    color: var(--green-theme);
+    font-size: 1.5rem;
+    text-transform: none;
+    white-space: normal;
+}
+
+.subtitulo-divisor::after {
+    content: "";
+    flex: 1;
+    height: 2px;
+    background-color: #ccc;
+    margin-left: 15px;
+    min-width: 20px;
+}
+        .audio-card {
+    background: #f5f5f5;
+    border-left: 5px solid var(--green-theme);
+    padding: 20px;
+    border-radius: 8px;
+    margin: 30px 0;
+}
+
+.audio-card h3 {
+    margin-top: 0;
+    color: var(--green-theme);
+}
+
+.audio-card audio {
+    width: 100%;
+}
+.overlay {
+    pointer-events: none;
+}
+        .image-section {
+    margin-top: 40px;
+    width: 100%;
+}
+
+.image-section img {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    display: block;
+    border-radius: 12px;
+}
+
+        .titulo-galeria {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin-bottom: 25px;
+}
+
+.titulo-galeria h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.titulo-galeria p {
+    color: #666;
+    font-size: 14px;
+}
+
+.titulo-galeria {
+    text-align: center;
+    font-family: Arial, sans-serif;
+    margin-bottom: 25px;
+}
+
+.titulo-galeria h2 {
+    font-size: 28px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.titulo-galeria p {
+    color: #666;
+    font-size: 14px;
+}
+
+/* Container que alinha os 5 vídeos em colunas */
+.container-shorts {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr); /* 5 colunas iguais */
+    gap: 15px; /* Espaço entre os vídeos */
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* Estilo individual de cada bloco de vídeo */
+.card-short {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden; 
+    aspect-ratio: 9 / 16; /* Força o formato vertical do celular */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* Força o player do YouTube a preencher todo o espaço do card */
+.card-short iframe {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 768px) {
+    .container-shorts {
+        display: flex; /* Transforma o grid em uma linha contínua */
+        overflow-x: auto; /* Ativa o deslizamento lateral com o dedo */
+        scroll-snap-type: x mandatory; /* Cria o efeito "ímã" ao soltar o card */
+        scroll-behavior: smooth;
+        gap: 15px;
+        padding: 10px 40px; /* Margem interna para revelar pedaços dos cards vizinhos */
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .container-shorts::-webkit-scrollbar {
+        display: block !important; /* Garante a exibição da barra */
+        height: 5px; /* Deixa a barrinha bem fina e elegante */
+    }
+  .container-shorts::-webkit-scrollbar-track {
+        background: #e0e0e0; 
+        border-radius: 10px;
+        margin: 0 40px; /* Alinha o tamanho do trilho com os vídeos */
+    }
+
+    /* O indicador que mexe conforme arrasta (cursor) */
+    .container-shorts::-webkit-scrollbar-thumb {
+        background: var(--green-theme); /* Usa a cor verde do seu tema */
+        border-radius: 10px;
+    }
+
+    .card-short {
+        flex: 0 0 75%; /* Deixa o tamanho exato para alinhar e cortar as pontas */
+        scroll-snap-align: center; /* Mantém centralizado */
+        transform: none !important; /* Remove qualquer efeito de tamanho diferente */
+        opacity: 1 !important; /* Mantém todos com o brilho igual */
+    }
+}
+        .secao-quiz {
+    width: 100%;
+    max-width: 900px; /* Mantém o mesmo alinhamento do texto padrão do seu site */
+    margin: 40px auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+.container-quiz {
+    width: 100%;
+    background-color: #f9f9f9;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    overflow: hidden; /* Garante que o quiz respeite as bordas arredondadas */
+}
+
+.container-quiz iframe {
+    width: 100%;
+    height: 600px; /* Altura padrão para computadores */
+    border: none;
+    display: block;
+}
+
+/* Ajuste de tela para dispositivos móveis */
+@media (max-width: 768px) {
+    .secao-quiz {
+        padding: 0 15px;
+    }
+    
+    .container-quiz iframe {
+        height: 500px; /* Reduz um pouco a altura no celular para melhor usabilidade */
+    }
+}
+
+        .secao-equipe {
+    background-color: #f9f9f9;
+    padding: 60px 20px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    text-align: center;
+}
+
+.container-equipe {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.titulo-equipe {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.subtitulo-equipe {
+    font-size: 1.1rem;
+    color: #666;
+    margin-bottom: 40px;
+}
+
+/* Grid que organiza os cards */
+.grid-equipe {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    justify-content: center;
+}
+
+/* Estilo do Card Individual */
+.card-membro {
+    background-color: #ffffff;
+    border-radius: 12px;
+    padding: 30px 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Efeito ao passar o mouse */
+.card-membro:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+/* Foto do Integrante */
+.foto-membro img {
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 20px;
+    border: 4px solid #eceff1;
+}
+
+/* Textos dentro do Card */
+.nome-membro {
+    font-size: 1.4rem;
+    color: #222;
+    margin-bottom: 5px;
+}
+
+.cargo-membro {
+    font-size: 0.95rem;
+    color: #007bff; /* Cor de destaque (Azul) */
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.bio-membro {
+    font-size: 0.9rem;
+    color: #555;
+    line-repeat: 1.5;
+}
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay"></div>
+
+<header>
+    <div class="logo-container">
+       <img src="UEL-horizontal-completa-branca.png" alt="Logo UEL">
+    </div>
+
+    <button class="menu-toggle" id="menu-btn">
+        <span></span><span></span><span></span>
+    </button>
+
+    <nav class="header-info" id="nav-menu">
+        <a href="#" class="contact-button">INÍCIO <div class="icon-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--green-theme)"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div></a>
+        <a href="#" class="contact-button">EQUIPE <div class="icon-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--green-theme)"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg></div></a>
+        <a href="#" class="contact-button">CONTATO <div class="icon-circle"><svg width="12" height="12" viewBox="0 0 24 24" fill="var(--green-theme)"><path d="M20 15.5c-1.2 0-2.4-.2-3.6-.6-.3-.1-.7 0-1 .2l-2.2 2.2c-2.8-1.4-5.1-3.8-6.6-6.6l2.2-2.2c.3-.3.4-.7.2-1-.3-1.1-.5-2.3-.5-3.5 0-.6-.4-1-1-1H4c-.6 0-1 .4-1 1 0 9.4 7.6 17 17 17 .6 0 1-.4 1-1v-3.5c0-.6-.4-1-1-1z"/></svg></div></a>
+    </nav>
+</header>
+
+<main class="container">
+
+    <section class="intro">
+        <h1>Por dentro das eleições: Como funcionam os bastidores do voto no Brasil</h1>
+        <p>
+            Da preparação das urnas aos testes de segurança e treinamento das equipes, as eleições brasileiras mobilizam uma estrutura que começa meses antes do primeiro voto.
+        </p>
+     </section>
+
+         <div class="subtitulo-divisor">   
+</div>
+     <section class="intro">
+         <p>
+            Antes da urna ser ligada no dia da eleição, equipes já passaram meses organizando transporte, testes, treinamento e segurança para que tudo funcione nas seções eleitorais.
+Quando chega o dia da votação, o processo parece simples: apresentar um documento, votar e esperar o resultado. Mas, por trás de poucos segundos diante da urna eletrônica, existe uma operação que começa muito antes.
+Planejamento, transporte de equipamentos, testes de segurança, treinamento de equipes e fiscalização fazem parte da preparação das eleições em todo o país. A votação dura segundos. A preparação leva meses. 
+        </p>
+    </section>
+ <section class="video-section">
+        <iframe
+            src="https://www.youtube.com/embed/mYz5Yhs22BY"
+            title="Vídeo do YouTube"
+            allowfullscreen>
+        </iframe>
+    </section>
+<div class="subtitulo-divisor">
+    <h2>O processo eleitoral</h2>
+</div>
+      <section class="intro">
+        <p>
+           As eleições não começam no dia da votação, e também não terminam quando os resultados são divulgados.
+Na prática, a organização das eleições quase não para. Assim que uma eleição acaba, outra já começa a ser organizada. O planejamento envolve calendário, tecnologia, logística e decisões políticas que acontecem ao longo de meses.
+Nas eleições de 2026, por exemplo, algumas etapas começaram ainda em outubro de 2025. Foi quando entidades fiscalizadoras receberam acesso antecipado aos sistemas eleitorais para acompanhar testes e verificar o funcionamento das plataformas usadas pelo Tribunal Superior Eleitoral (TSE).
+Cada etapa segue datas definidas pela Justiça Eleitoral.
+Entre março e abril de 2026 aconteceu a  janela partidária, período em que parlamentares puderam trocar de partido para disputar as eleições. Já o prazo final para filiação partidária e definição do domicílio eleitoral terminou em abril, seis meses antes do primeiro turno.
+Enquanto os eleitores acompanham campanhas e debates, equipes trabalham nos bastidores para cumprir os prazos da eleição.
+
+        </p>
+    </section>
+    <section class="audio-card">
+    <h3>🎙️ Entrevista Com Especialista</h3>
+    <audio controls>
+        <source src="ENTREVISTA - RAFAEL MORAES (1).mp3" type="audio/mpeg">
+    </audio>
+</section>
+    
+    <div class="subtitulo-divisor">   
+    <h2>Como funcionam as eleições</h2>
+</div>
+      <section class="intro">
+        <p>
+           O momento da votação é só a parte mais visível das eleições.
+Antes de chegar às seções eleitorais, as urnas eletrônicas passam por preparação técnica, testes e auditorias. Equipes da Justiça Eleitoral organizam locais de votação, cadastro de eleitores e coordenação das equipes em diferentes regiões do país.
+Para o eleitor, votar pode levar poucos minutos. Antes disso, urnas já passaram por testes, equipes foram treinadas e locais de votação precisam ser organizados.
+A urna eletrônica é a parte mais conhecida das eleições para a maioria dos eleitores. Ela registra e contabiliza os votos digitalmente, mas também depende de uma rede de suporte técnico e fiscalização que pouca gente vê.
+        </p>
+    </section>
+    
+      <div class="subtitulo-divisor">
+    <h2>Treinamento das equipes</h2>
+</div>
+      <section class="intro">
+        <p>
+           Além da tecnologia, as eleições dependem diretamente das pessoas que trabalham no processo.
+Mesários, técnicos e outros colaboradores recebem orientações antes da votação para saber como agir em diferentes situações durante o dia da eleição.
+Para quem participa desses treinamentos, o contato também ajuda a aproximar o eleitor dos bastidores das eleições, uma parte do processo que normalmente passa despercebida.
+Ricardo Pereira, servidor do TSE, afirma que muita gente participa da votação sem conhecer os bastidores da preparação eleitoral: “Normalmente o eleitor chega, vê a urna pronta para votar e não conhece os bastidores”.
+Ele também destaca o interesse das pessoas em entender como funciona a preparação das eleições antes do dia da votação.
+Os mesários organizam as seções eleitorais. Eles conferem documentos, liberam os eleitores para votar e ajudam no controle das filas e no atendimento.
+Já as equipes técnicas atuam nos bastidores. São elas que acompanham a instalação das urnas, fazem manutenção dos equipamentos e prestam suporte caso algum problema aconteça durante a votação.
+Os treinamentos orientam as equipes sobre filas, problemas técnicos e atendimento aos eleitores no dia da votação.
+        </p>
+    </section>
+    
+     <section class="audio-card">
+    <h3>🎙️ Seções Eleitorais</h3>
+    <audio controls>
+        <source src="SEÇÕES ELEITORAIS.mp3" type="audio/mpeg">
+    </audio>
+</section>
+    
+      <div class="subtitulo-divisor">
+    <h2>Organização e logística</h2>
+</div>
+      <section class="intro">
+        <p>
+            Fazer uma eleição funcionar em todo o território brasileiro exige uma operação logística de grande escala.
+Mas, nos meses que antecedem a votação, a rotina também se intensifica dentro da Justiça Eleitoral.
+Ricardo descreve esse período como um dos mais corridos antes da eleição: “É um período bastante complicado”. Com o fechamento do cadastro eleitoral, aumenta a procura de eleitores nos cartórios enquanto as equipes seguem na preparação da votação.
+As urnas eletrônicas precisam chegar a milhares de locais de votação, incluindo cidades pequenas, áreas rurais e regiões de difícil acesso. Para isso, o transporte dos equipamentos começa dias antes da eleição.
+Além das urnas, também é necessário organizar documentos, equipes, locais de votação e cronogramas de trabalho.
+As equipes também acompanham o transporte para garantir que as urnas cheguem corretamente às seções eleitorais.
+Além da logística, a Justiça Eleitoral também divulga campanhas de orientação ao eleitor. Em 2026, o calendário eleitoral também incluiu a divulgação de conteúdos informativos em rádio e televisão para explicar regras da eleição e incentivar a participação política.
+O calendário ainda define prazos importantes para os eleitores, como regularização do título, transferência de domicílio eleitoral e revisão cadastral.
+O prazo final para essas alterações foi estabelecido em 6 de maio de 2026. Depois dessa data, os serviços foram suspensos temporariamente para a organização da votação.
+
+        </p>
+    </section>
+      <div class="subtitulo-divisor">
+    <h2>Tecnologia e segurança</h2>
+</div>
+      <section class="intro">
+        <p>
+            A tecnologia é uma das bases do sistema eleitoral brasileiro.
+Antes de serem usadas nas eleições, as urnas eletrônicas passam por diferentes etapas de teste e verificação. Uma das principais é o Teste Público de Segurança, realizado para identificar possíveis falhas nos sistemas eleitorais.
+Em 2025, os testes aconteceram entre os dias 1º e 5 de dezembro. Depois disso, o calendário eleitoral também previu uma nova rodada de testes em maio de 2026 para confirmar as correções feitas após as análises anteriores.
+Além dos testes técnicos, o sistema também passa por auditorias e acompanhamento de entidades fiscalizadoras.
+Essas instituições recebem acesso antecipado aos sistemas eleitorais e podem acompanhar parte do funcionamento das plataformas usadas nas eleições.
+A ideia é permitir que diferentes órgãos acompanhem os testes e fiscalizem parte das etapas antes da votação.
+        </p>
+          
+          <section class="image-section">
+    <img src="infografico.jfif" alt="Descrição da imagem">
+</section>
+          
+    </section>
+      <div class="subtitulo-divisor">
+    <h2>Um processo que vai além das urnas</h2>
+</div>
+      <section class="intro">
+        <p>
+           Embora o eleitor tenha contato direto apenas com o momento da votação, as eleições envolvem muito mais do que alguns minutos diante da urna eletrônica.
+Por trás de cada voto existe uma estrutura que funciona durante meses: equipes treinadas, transporte de equipamentos, testes de segurança, fiscalização e planejamento.
+Grande parte desse trabalho acontece longe das seções eleitorais e quase passa despercebida pelos eleitores.No fim das contas, a urna é só a parte visível de um processo muito maior. 
+No dia da votação, o eleitor vê apenas alguns segundos da eleição diante da urna. Nos bastidores, porém, meses de preparação antecedem esse momento.
+        </p>
+    </section>
+<p>
+    
+</p>
+<section class="secao-shorts">
+    <div class="titulo-galeria">
+        <h2>Videos verticais </h2>
+        <p>conheça mais </p>
+    </div>
+
+    <div class="container-shorts">
+        <div class="card-short">
+            <iframe src="https://www.youtube.com/embed/0su84ML6iG4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <div class="card-short">
+            <iframe src="https://www.youtube.com/embed/Jhz_gKGFI_8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <div class="card-short">
+            <iframe src="https://www.youtube.com/embed/UyADzeswpIk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <div class="card-short">
+            <iframe src="https://www.youtube.com/embed/9S0IGSxQdUc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+
+        <div class="card-short">
+            <iframe src="https://www.youtube.com/embed/dMOga2IWzBc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        </div>
+    </div>
+</section>
+    
+<section class="secao-quiz">
+    <div class="subtitulo-divisor">
+        <h2>Teste seus conhecimentos</h2>
+    </div>
+    
+    <div class="container-quiz">
+        <iframe src="https://ayshanicoll.github.io/site/testequiz.html" title="Quiz Eleições" allowfullscreen></iframe>
+    </div>
+</section>
+    <section class="secao-equipe">
+    <div class="container-equipe">
+        <h2 class="titulo-equipe">Nossa Equipe</h2>
+        <p class="subtitulo-equipe">Produzido por estudantes de Jornalismo da UEL.</p>
+        
+        <div class="grid-equipe">
+            
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Manoel Cardeal da Costa Neto</h3>
+                <p class="cargo-membro">Líder</p>
+            </div>
+
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+            
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Funça</p>
+            </div>
+
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+           <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome </h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+            <div class="card-membro">
+                <div class="foto-membro">
+                    <img src="https://via.placeholder.com/150" alt="Foto do Integrante">
+                </div>
+                <h3 class="nome-membro">Nome</h3>
+                <p class="cargo-membro">Função</p>
+            </div>
+        </div>
+    </div>
+</section>
+</main>
+    
+<script>
+    const btn = document.getElementById('menu-btn');
+    const menu = document.getElementById('nav-menu');
+    const overlay = document.getElementById('overlay');
+
+    function toggleMenu() {
+        btn.classList.toggle('open');
+        menu.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+    }
+
+    btn.addEventListener('click', toggleMenu);
+    overlay.addEventListener('click', toggleMenu);
+    document.querySelectorAll('.contact-button').forEach(link => link.addEventListener('click', toggleMenu));
+</script>
+
+</body>
+</html>
