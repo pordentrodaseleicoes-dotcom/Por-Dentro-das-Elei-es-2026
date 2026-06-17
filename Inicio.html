@@ -266,6 +266,86 @@
         opacity: 1 !important; /* Mantém todos com o brilho igual */
     }
 }
+        .video-modal {
+    display: none; /* Fica escondido por padrão */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+}
+
+.video-modal.active {
+    display: flex; /* Exibe quando ativo */
+}
+
+.modal-content {
+    position: relative;
+    width: 90%;
+    max-width: 400px; /* Mantém a proporção de celular para o Shorts */
+    aspect-ratio: 9 / 16;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.modal-content iframe {
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+/* Botão Fechar */
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    color: white;
+    font-size: 35px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 2100;
+    background: none;
+    border: none;
+}
+
+/* Botões de Navegação (Anterior e Próximo) */
+.nav-modal-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    font-size: 24px;
+    padding: 15px 20px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.3s;
+    z-index: 2100;
+}
+
+.nav-modal-btn:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.btn-prev { left: 5%; }
+.btn-next { right: 5%; }
+
+/* Ajustes para telas menores (celular) */
+@media (max-width: 768px) {
+    .nav-modal-btn {
+        padding: 10px 15px;
+        font-size: 18px;
+    }
+    .btn-prev { left: 2%; }
+    .btn-next { right: 2%; }
+}
+        
         .secao-quiz {
     width: 100%;
     max-width: 900px; /* Mantém o mesmo alinhamento do texto padrão do seu site */
@@ -622,28 +702,49 @@ O problema foi resolvido ainda no local e a seção voltou a funcionar normalmen
         <h2>Curiosidades sobre as eleições</h2>
     </div>
 
-    <div class="container-shorts">
-        <div class="card-short">
+   <div class="container-shorts">
+        <!-- Card 1 -->
+        <div class="card-short js-video-card" style="position: relative; cursor: pointer;">
+            <div style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2;" data-video="https://www.youtube.com/embed/0su84ML6iG4"></div>
             <iframe src="https://www.youtube.com/embed/0su84ML6iG4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
 
-        <div class="card-short">
+        <!-- Card 2 -->
+        <div class="card-short js-video-card" style="position: relative; cursor: pointer;">
+            <div style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2;" data-video="https://www.youtube.com/embed/Jhz_gKGFI_8"></div>
             <iframe src="https://www.youtube.com/embed/Jhz_gKGFI_8" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
 
-        <div class="card-short">
+        <!-- Card 3 -->
+        <div class="card-short js-video-card" style="position: relative; cursor: pointer;">
+            <div style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2;" data-video="https://www.youtube.com/embed/UyADzeswpIk"></div>
             <iframe src="https://www.youtube.com/embed/UyADzeswpIk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
 
-        <div class="card-short">
+        <!-- Card 4 -->
+        <div class="card-short js-video-card" style="position: relative; cursor: pointer;">
+            <div style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2;" data-video="https://www.youtube.com/embed/9S0IGSxQdUc"></div>
             <iframe src="https://www.youtube.com/embed/9S0IGSxQdUc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
 
-        <div class="card-short">
+        <!-- Card 5 -->
+        <div class="card-short js-video-card" style="position: relative; cursor: pointer;">
+            <div style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 2;" data-video="https://www.youtube.com/embed/dMOga2IWzBc"></div>
             <iframe src="https://www.youtube.com/embed/dMOga2IWzBc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
         </div>
     </div>
-</section>
+        <div class="video-modal" id="videoModal">
+    <button class="close-modal" id="closeModal">&times;</button>
+    
+    <button class="nav-modal-btn btn-prev" id="prevVideo">&#10094;</button>
+    
+    <div class="modal-content">
+        <iframe id="modalIframe" src="" allowfullscreen></iframe>
+    </div>
+    
+    <button class="nav-modal-btn btn-next" id="nextVideo">&#10095;</button>
+</div>
+        
     
 <section class="secao-quiz">
     <div class="subtitulo-divisor">
@@ -739,6 +840,7 @@ O problema foi resolvido ainda no local e a seção voltou a funcionar normalmen
 </main>
     
 <script>
+    // --- LÓGICA DO MENU HAMBÚRGUER (MANTIDA) ---
     const btn = document.getElementById('menu-btn');
     const menu = document.getElementById('nav-menu');
     const overlay = document.getElementById('overlay');
@@ -753,6 +855,72 @@ O problema foi resolvido ainda no local e a seção voltou a funcionar normalmen
     btn.addEventListener('click', toggleMenu);
     overlay.addEventListener('click', toggleMenu);
     document.querySelectorAll('.contact-button').forEach(link => link.addEventListener('click', toggleMenu));
+
+
+    // --- LÓGICA DO MODAL DE VÍDEOS EXPANDIDOS (NOVA) ---
+    const videoCards = document.querySelectorAll('.js-video-card div');
+    const videoModal = document.getElementById('videoModal');
+    const modalIframe = document.getElementById('modalIframe');
+    const closeModal = document.getElementById('closeModal');
+    const prevVideoBtn = document.getElementById('prevVideo');
+    const nextVideoBtn = document.getElementById('nextVideo');
+
+    // Cria uma lista apenas com as URLs dos vídeos
+    const videoList = Array.from(videoCards).map(card => card.getAttribute('data-video'));
+    let currentVideoIndex = 0;
+
+    // Função para abrir o modal no vídeo certo
+    function openVideo(index) {
+        currentVideoIndex = index;
+        modalIframe.src = videoList[currentVideoIndex] + "?autoplay=1"; // Ativa autoplay ao abrir
+        videoModal.classList.add('active');
+        document.body.style.overflow = 'hidden'; // Trava o scroll do fundo
+    }
+
+    // Função para fechar o modal
+    function closeVideoModal() {
+        videoModal.classList.remove('active');
+        modalIframe.src = ""; // Reseta o src para o vídeo parar de tocar
+        document.body.style.overflow = 'auto'; // Libera o scroll
+    }
+
+    // Navegar para o próximo vídeo
+    function nextVideo() {
+        let nextIndex = currentVideoIndex + 1;
+        if (nextIndex >= videoList.length) nextIndex = 0; // Volta pro primeiro se chegar no fim
+        openVideo(nextIndex);
+    }
+
+    // Navegar para o vídeo anterior
+    function prevVideo() {
+        let prevIndex = currentVideoIndex - 1;
+        if (prevIndex < 0) prevIndex = videoList.length - 1; // Vai pro último se voltar do primeiro
+        openVideo(prevIndex);
+    }
+
+    // Ouvintes de eventos (Cliques)
+    videoCards.forEach((card, index) => {
+        card.addEventListener('click', () => openVideo(index));
+    });
+
+    closeModal.addEventListener('click', closeVideoModal);
+    nextVideoBtn.addEventListener('click', nextVideo);
+    prevVideoBtn.addEventListener('click', prevVideo);
+
+    // Fechar se clicar fora do conteúdo do modal
+    videoModal.addEventListener('click', (e) => {
+        if (e.target === videoModal) {
+            closeVideoModal();
+        }
+    });
+
+    // BÔNUS: Navegação por setas do teclado para computadores
+    document.addEventListener('keydown', (e) => {
+        if (!videoModal.classList.contains('active')) return;
+        if (e.key === 'Escape') closeVideoModal();
+        if (e.key === 'ArrowRight') nextVideo();
+        if (e.key === 'ArrowLeft') prevVideo();
+    });
 </script>
 
 </body>
