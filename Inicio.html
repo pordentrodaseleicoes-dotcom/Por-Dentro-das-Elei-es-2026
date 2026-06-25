@@ -807,24 +807,27 @@ O problema foi resolvido ainda no local e a seção voltou a funcionar normalmen
 </main>
     
 <script>
-    // --- LÓGICA DO MENU HAMBÚRGUER (MANTIDA) ---
+    // --- LÓGICA DO MENU HAMBÚRGUER (CORRIGIDA COM VALIDAÇÃO) ---
     const btn = document.getElementById('menu-btn');
     const menu = document.getElementById('nav-menu');
     const overlay = document.getElementById('overlay');
 
     function toggleMenu() {
-        btn.classList.toggle('open');
-        menu.classList.toggle('active');
-        overlay.classList.toggle('active');
-        document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+        if (btn && menu && overlay) {
+            btn.classList.toggle('open');
+            menu.classList.toggle('active');
+            overlay.classList.toggle('active');
+            document.body.style.overflow = menu.classList.contains('active') ? 'hidden' : 'auto';
+        }
     }
 
-    btn.addEventListener('click', toggleMenu);
-    overlay.addEventListener('click', toggleMenu);
+    // Só adiciona os ouvintes se os elementos realmente existirem na página
+    if (btn) btn.addEventListener('click', toggleMenu);
+    if (overlay) overlay.addEventListener('click', toggleMenu);
     document.querySelectorAll('.contact-button').forEach(link => link.addEventListener('click', toggleMenu));
 
 
-    // --- LÓGICA DO MODAL DE VÍDEOS EXPANDIDOS (NOVA) ---
+    // --- LÓGICA DO MODAL DE VÍDEOS EXPANDIDOS (FUNCIONANDO) ---
     const videoCards = document.querySelectorAll('.js-video-card div');
     const videoModal = document.getElementById('videoModal');
     const modalIframe = document.getElementById('modalIframe');
@@ -870,20 +873,22 @@ O problema foi resolvido ainda no local e a seção voltou a funcionar normalmen
         card.addEventListener('click', () => openVideo(index));
     });
 
-    closeModal.addEventListener('click', closeVideoModal);
-    nextVideoBtn.addEventListener('click', nextVideo);
-    prevVideoBtn.addEventListener('click', prevVideo);
+    if (closeModal) closeModal.addEventListener('click', closeVideoModal);
+    if (nextVideoBtn) nextVideoBtn.addEventListener('click', nextVideo);
+    if (prevVideoBtn) prevVideoBtn.addEventListener('click', prevVideo);
 
     // Fechar se clicar fora do conteúdo do modal
-    videoModal.addEventListener('click', (e) => {
-        if (e.target === videoModal) {
-            closeVideoModal();
-        }
-    });
+    if (videoModal) {
+        videoModal.addEventListener('click', (e) => {
+            if (e.target === videoModal) {
+                closeVideoModal();
+            }
+        });
+    }
 
-    // BÔNUS: Navegação por setas do teclado para computadores
+    // Navegação por setas do teclado para computadores
     document.addEventListener('keydown', (e) => {
-        if (!videoModal.classList.contains('active')) return;
+        if (!videoModal || !videoModal.classList.contains('active')) return;
         if (e.key === 'Escape') closeVideoModal();
         if (e.key === 'ArrowRight') nextVideo();
         if (e.key === 'ArrowLeft') prevVideo();
